@@ -39,7 +39,7 @@ Cls.prototype._shouldRetry = function() {
     case 'rejected':
       return false;
     default:
-      throw new Error('Unsupported promise state: ' state);
+      throw new Error('Unsupported promise state: ' + state);
   }
 };
 
