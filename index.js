@@ -13,16 +13,18 @@ Cls.prototype.start = function() {
 };
 
 Cls.prototype._poll = function() {
-  this._perform().then(function() {
+  return this._perform().then(function() {
     if(this._shouldRetry() === false) {
       return;
     }
 
-    // Exit the current stack
-    setTimeout(function() {
-      this._poll();
-    }.bind(this), 0);
+    this._repoll();
   }.bind(this));
+};
+
+Cls.prototype._repoll = function() {
+  // Exit the current stack
+  setTimeout(this._poll.bind(this)(), 0);
 };
 
 Cls.prototype._perform = function() {
