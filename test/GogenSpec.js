@@ -126,4 +126,28 @@ describe('Gogen', function() {
       });
     });
   });
+
+  describe('#start', function() {
+    it('Should poll 3 times then resolve', function(done) {
+      var count = 0;
+
+      var gogen = new Gogen(function() {
+        var defer = Q.defer();
+        defer.resolve('DATA');
+
+        return defer.promise;
+      }, function(data) {
+        count++;
+        if(count === 3) {
+          return true;
+        }
+
+        return false;
+      }, {});
+
+      gogen.start().then(function() {
+        
+      }).then(done, done);
+    });
+  });
 });
