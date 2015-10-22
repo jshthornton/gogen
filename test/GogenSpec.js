@@ -39,8 +39,45 @@ describe('Gogen', function() {
         expect(res).to.equal(false);
       });
     });
+  });
 
+  describe('#_evaluateCondition', function() {
+    var gogen;
+    var conditionStub;
     
+    beforeEach(function() {
+      conditionStub = sinon.stub();
+      gogen = new Gogen(function() {}, conditionStub, {});
+    });
 
+    context('When condition is true', function() {
+      it('Should resolve', function() {
+        conditionStub.returns(true);
+        var defSpy = sinon.spy(gogen._deferred, 'resolve');
+        gogen._evaluateCondition({});
+
+        expect(defSpy.called).to.equal(true);
+      });
+    });
+
+    context('When condition throws', function() {
+      it('Should reject', function() {
+        conditionStub.throws();
+        var defSpy = sinon.spy(gogen._deferred, 'reject');
+        gogen._evaluateCondition({});
+
+        expect(defSpy.called).to.equal(true);
+      });
+    });
+
+    context('When condition is false', function() {
+      it('Should notify', function() {
+        conditionStub.returns(false);
+        var defSpy = sinon.spy(gogen._deferred, 'notify');
+        gogen._evaluateCondition({});
+
+        expect(defSpy.called).to.equal(true);
+      });
+    });
   });
 });
