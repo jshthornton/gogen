@@ -80,4 +80,50 @@ describe('Gogen', function() {
       });
     });
   });
+
+  describe('#_perform', function() {
+
+  });
+
+  describe('#_poll', function() {
+    var gogen;
+
+    context('When should retry is true', function() {
+      it('Should repoll', function(done) {
+        gogen = new Gogen(function() {}, function() {}, {});
+        var performStub = sinon.stub(gogen, '_perform');
+        var shouldRetryStub = sinon.stub(gogen, '_shouldRetry');
+        var repollStub = sinon.stub(gogen, '_repoll');
+
+        var def = Q.defer();
+        def.resolve();
+        performStub.returns(def.promise);
+
+        shouldRetryStub.returns(true);
+
+        gogen._poll().then(function() {
+          expect(repollStub.called).to.equal(true);
+        }).then(done, done);
+      });
+    });
+
+    context('When should retry is false', function() {
+      it('Should not repoll', function(done) {
+        gogen = new Gogen(function() {}, function() {}, {});
+        var performStub = sinon.stub(gogen, '_perform');
+        var shouldRetryStub = sinon.stub(gogen, '_shouldRetry');
+        var repollStub = sinon.stub(gogen, '_repoll');
+
+        var def = Q.defer();
+        def.resolve();
+        performStub.returns(def.promise);
+
+        shouldRetryStub.returns(false);
+
+        gogen._poll().then(function() {
+          expect(repollStub.called).to.equal(false);
+        }).then(done, done);
+      });
+    });
+  });
 });
