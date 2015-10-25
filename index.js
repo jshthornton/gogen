@@ -24,7 +24,7 @@ Cls.prototype._poll = function() {
 
 Cls.prototype._repoll = function() {
   // Exit the current stack
-  setTimeout(this._poll.bind(this)(), 0);
+  setTimeout(this._poll.bind(this), 0);
 };
 
 Cls.prototype._perform = function() {
